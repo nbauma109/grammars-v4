@@ -42,6 +42,7 @@ literal
     | CharacterLiteral
     | StringLiteral
     | SymbolLiteral
+    | XmlLiteral
     | 'null'
     ;
 
@@ -586,6 +587,37 @@ FloatingPointLiteral
     | Digit+ ExponentPart? FloatType
     ;
 
+XmlLiteral
+ : XmlOpenTag (XmlLiteral | ~[<>])*? XmlCloseTag
+ ;
+
+fragment XmlOpenTag
+ : '<' ~[ \t\r\n<>]+ (S+ Attribute)* S* '>'
+ ;
+
+fragment XmlCloseTag
+ : '</' ~[ \t\r\n<>]+ '>'
+ ;
+
+fragment Attribute
+ : AttributeKey S* '=' S* AttributeValue
+ ;
+
+fragment AttributeKey
+ : [a-zA-Z_0-9:]+
+ ;
+
+fragment AttributeValue
+ : AttributeKey
+ | '"' ~["]* '"'
+ | '\'' ~[']* '\''
+ ;
+
+fragment S
+ : [ \t\r\n]
+ ;
+
+
 Varid
     : Lower Idrest
     ;
@@ -659,6 +691,7 @@ fragment Opchar
     | '^'
     | '|'
     | '~'
+    | '/'
     ;
 
 fragment Op
